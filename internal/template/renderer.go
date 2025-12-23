@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"text/template"
 
-	"github.com/emmajones/goboot/internal/config"
+	"github.com/codewithme224/goboot/internal/config"
 )
 
 // Renderer handles template rendering.

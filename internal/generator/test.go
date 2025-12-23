@@ -7,9 +7,9 @@ import (
 	"os/exec"
 	"path/filepath"
 
-	"github.com/emmajones/goboot/internal/context"
-	"github.com/emmajones/goboot/internal/filesystem"
-	"github.com/emmajones/goboot/internal/template"
+	"github.com/codewithme224/goboot/internal/context"
+	"github.com/codewithme224/goboot/internal/filesystem"
+	"github.com/codewithme224/goboot/internal/template"
 )
 
 //go:embed all:templates/test

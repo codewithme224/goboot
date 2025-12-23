@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/emmajones/goboot/cmd"
+	"github.com/codewithme224/goboot/cmd"
 )
 
 func main() {

@@ -1,7 +1,7 @@
 package context
 
 import (
-	"github.com/emmajones/goboot/internal/config"
+	"github.com/codewithme224/goboot/internal/config"
 )
 
 // ProjectContext holds information about the project being generated or modified.

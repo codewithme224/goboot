@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/emmajones/goboot/internal/doctor"
+	"github.com/codewithme224/goboot/internal/doctor"
 	"github.com/spf13/cobra"
 )
 

@@ -7,9 +7,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/emmajones/goboot/internal/config"
-	"github.com/emmajones/goboot/internal/filesystem"
-	"github.com/emmajones/goboot/internal/template"
+	"github.com/codewithme224/goboot/internal/config"
+	"github.com/codewithme224/goboot/internal/filesystem"
+	"github.com/codewithme224/goboot/internal/template"
 )
 
 // BaseGenerator provides common functionality for all generators.

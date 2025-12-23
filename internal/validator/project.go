@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"regexp"
 
-	"github.com/emmajones/goboot/internal/config"
+	"github.com/codewithme224/goboot/internal/config"
 )
 
 var (

@@ -6,9 +6,9 @@ import (
 	"os"
 	"strings"
 
-	"github.com/emmajones/goboot/internal/config"
-	"github.com/emmajones/goboot/internal/generator"
-	"github.com/emmajones/goboot/internal/validator"
+	"github.com/codewithme224/goboot/internal/config"
+	"github.com/codewithme224/goboot/internal/generator"
+	"github.com/codewithme224/goboot/internal/validator"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )

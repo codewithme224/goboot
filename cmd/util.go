@@ -6,8 +6,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/emmajones/goboot/internal/config"
-	"github.com/emmajones/goboot/internal/context"
+	"github.com/codewithme224/goboot/internal/config"
+	"github.com/codewithme224/goboot/internal/context"
 	"gopkg.in/yaml.v3"
 )
 

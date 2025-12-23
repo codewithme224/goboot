@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/emmajones/goboot/internal/config"
-	"github.com/emmajones/goboot/internal/context"
-	"github.com/emmajones/goboot/internal/filesystem"
-	"github.com/emmajones/goboot/internal/template"
+	"github.com/codewithme224/goboot/internal/config"
+	"github.com/codewithme224/goboot/internal/context"
+	"github.com/codewithme224/goboot/internal/filesystem"
+	"github.com/codewithme224/goboot/internal/template"
 )
 
 // Generator handles the project scaffolding.

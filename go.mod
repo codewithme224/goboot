@@ -1,4 +1,4 @@
-module github.com/emmajones/goboot
+module github.com/codewithme224/goboot
 
 go 1.25.5
 

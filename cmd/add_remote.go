@@ -6,9 +6,9 @@ import (
 	"os/exec"
 	"path/filepath"
 
-	"github.com/emmajones/goboot/internal/filesystem"
-	"github.com/emmajones/goboot/internal/generator"
-	"github.com/emmajones/goboot/internal/template"
+	"github.com/codewithme224/goboot/internal/filesystem"
+	"github.com/codewithme224/goboot/internal/generator"
+	"github.com/codewithme224/goboot/internal/template"
 	"github.com/spf13/cobra"
 )
 

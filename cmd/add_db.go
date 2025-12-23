@@ -3,8 +3,8 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/emmajones/goboot/internal/config"
-	"github.com/emmajones/goboot/internal/generator"
+	"github.com/codewithme224/goboot/internal/config"
+	"github.com/codewithme224/goboot/internal/generator"
 	"github.com/spf13/cobra"
 )
 

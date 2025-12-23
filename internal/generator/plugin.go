@@ -1,7 +1,7 @@
 package generator
 
 import (
-	"github.com/emmajones/goboot/internal/context"
+	"github.com/codewithme224/goboot/internal/context"
 )
 
 // Plugin defines the interface for a generator feature.
