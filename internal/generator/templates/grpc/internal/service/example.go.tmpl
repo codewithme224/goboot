@@ -1,0 +1,17 @@
+package service
+
+import (
+	"context"
+
+	"{{ .Module }}/api"
+)
+
+type ExampleService struct {
+	api.UnimplementedExampleServiceServer
+}
+
+func (s *ExampleService) Ping(ctx context.Context, req *api.PingRequest) (*api.PingResponse, error) {
+	return &api.PingResponse{
+		Message: "Pong: " + req.GetMessage(),
+	}, nil
+}

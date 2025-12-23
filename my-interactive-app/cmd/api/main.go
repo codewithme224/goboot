@@ -1,0 +1,62 @@
+package main
+
+import (
+	"context"
+	"log"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
+
+	"github.com/test/interactive/internal/server"
+	"gopkg.in/yaml.v3"
+	// [goboot:import]
+)
+
+type Config struct {
+	Server struct {
+		Port int `yaml:"port"`
+	} `yaml:"server"`
+	// [goboot:config]
+}
+
+func main() {
+	// Load config
+	configPath := "config.yaml"
+	data, err := os.ReadFile(configPath)
+	if err != nil {
+		log.Fatalf("Failed to read config: %v", err)
+	}
+
+	var cfg Config
+	if err := yaml.Unmarshal(data, &cfg); err != nil {
+		log.Fatalf("Failed to parse config: %v", err)
+	}
+
+	srv := server.NewHTTPServer(cfg.Server.Port)
+
+	// [goboot:init]
+
+	go func() {
+		log.Printf("Starting server on :%d", cfg.Server.Port)
+		if err := srv.Start(); err != nil {
+			log.Fatalf("Server failed: %v", err)
+		}
+	}()
+
+	// Wait for interrupt signal to gracefully shutdown the server
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+	<-quit
+
+	log.Println("Shutting down server...")
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	if err := srv.Shutdown(ctx); err != nil {
+		log.Fatalf("Server forced to shutdown: %v", err)
+	}
+
+	log.Println("Server exiting")
+}

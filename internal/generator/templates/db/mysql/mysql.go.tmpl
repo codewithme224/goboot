@@ -1,0 +1,24 @@
+package db
+
+import (
+	"database/sql"
+	"fmt"
+	_ "github.com/go-sql-driver/mysql"
+)
+
+type MySQLDB struct {
+	*sql.DB
+}
+
+func NewMySQLDB(dsn string) (*MySQLDB, error) {
+	db, err := sql.Open("mysql", dsn)
+	if err != nil {
+		return nil, fmt.Errorf("failed to open mysql: %w", err)
+	}
+
+	if err := db.Ping(); err != nil {
+		return nil, fmt.Errorf("failed to ping mysql: %w", err)
+	}
+
+	return &MySQLDB{db}, nil
+}

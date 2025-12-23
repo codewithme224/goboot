@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Name }}
+  labels:
+    app: {{ .Name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Name }}
+    spec:
+      containers:
+      - name: {{ .Name }}
+        image: {{ .Name }}:latest
+        ports:
+        - containerPort: {{ if eq .Type "rest" }}8080{{ else }}50051{{ end }}
+        env:
+        - name: APP_ENV
+          value: production
+        volumeMounts:
+        - name: config-volume
+          mountPath: /app/config.yaml
+          subPath: config.yaml
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: {{ if eq .Type "rest" }}8080{{ else }}50051{{ end }}
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: {{ if eq .Type "rest" }}8080{{ else }}50051{{ end }}
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "100m"
+          limits:
+            memory: "128Mi"
+            cpu: "200m"
+      volumes:
+      - name: config-volume
+        configMap:
+          name: {{ .Name }}-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Name }}
+spec:
+  selector:
+    app: {{ .Name }}
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: {{ if eq .Type "rest" }}8080{{ else }}50051{{ end }}
+  type: ClusterIP
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Name }}-config
+data:
+  config.yaml: |
+    app:
+      name: {{ .Name }}
+      env: production
+    server:
+      port: {{ if eq .Type "rest" }}8080{{ else }}50051{{ end }}
+      type: {{ .Type }}

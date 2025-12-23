@@ -1,0 +1,32 @@
+# Build stage
+ARG GO_VERSION=1.22
+FROM golang:${GO_VERSION}-alpine AS builder
+
+WORKDIR /app
+
+# Install build dependencies
+RUN apk add --no-cache git
+
+COPY go.mod ./
+RUN go mod download
+
+COPY . .
+
+RUN CGO_ENABLED=0 GOOS=linux go build -o main ./cmd/api/main.go
+
+# Final stage
+FROM alpine:latest
+
+RUN apk add --no-cache ca-certificates && \
+    addgroup -S appgroup && adduser -S appuser -G appgroup
+
+WORKDIR /app
+
+COPY --from=builder /app/main .
+COPY --from=builder /app/config.yaml .
+
+USER appuser
+
+EXPOSE 8080
+
+CMD ["./main"]

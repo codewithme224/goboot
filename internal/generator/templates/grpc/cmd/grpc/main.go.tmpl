@@ -1,0 +1,41 @@
+package main
+
+import (
+	"log"
+	"os"
+	"path/filepath"
+
+	"{{ .Module }}/internal/server"
+	"gopkg.in/yaml.v3"
+	// [goboot:import]
+)
+
+type Config struct {
+	Server struct {
+		Port int `yaml:"port"`
+	} `yaml:"server"`
+	// [goboot:config]
+}
+
+func main() {
+	// Load config
+	configPath := "config.yaml"
+	data, err := os.ReadFile(configPath)
+	if err != nil {
+		log.Fatalf("Failed to read config: %v", err)
+	}
+
+	var cfg Config
+	if err := yaml.Unmarshal(data, &cfg); err != nil {
+		log.Fatalf("Failed to parse config: %v", err)
+	}
+
+	srv := server.NewGRPCServer(cfg.Server.Port)
+
+	// [goboot:init]
+
+	log.Printf("Starting gRPC server on :%d", cfg.Server.Port)
+	if err := srv.Start(); err != nil {
+		log.Fatalf("Failed to start server: %v", err)
+	}
+}

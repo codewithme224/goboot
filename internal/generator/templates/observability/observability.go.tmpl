@@ -1,0 +1,54 @@
+package observability
+
+import (
+	"context"
+	"fmt"
+	"log/slog"
+	"net/http"
+	"os"
+
+	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/sdk/resource"
+	sdktrace "go.opentelemetry.io/otel/sdk/trace"
+	semconv "go.opentelemetry.io/otel/semconv/v1.17.0"
+)
+
+// Setup initializes the observability stack.
+func Setup(serviceName string, metricsPort int) (func(), error) {
+	// 1. Setup Structured Logging
+	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
+	slog.SetDefault(logger)
+
+	// 2. Setup OpenTelemetry Tracing
+	tp, err := initTracer(serviceName)
+	if err != nil {
+		return nil, err
+	}
+	otel.SetTracerProvider(tp)
+
+	// 3. Setup Prometheus Metrics
+	go func() {
+		http.Handle("/metrics", promhttp.Handler())
+		slog.Info("Starting metrics server", "port", metricsPort)
+		if err := http.ListenAndServe(fmt.Sprintf(":%d", metricsPort), nil); err != nil {
+			slog.Error("Metrics server failed", "error", err)
+		}
+	}()
+
+	return func() {
+		if err := tp.Shutdown(context.Background()); err != nil {
+			slog.Error("Failed to shutdown tracer provider", "error", err)
+		}
+	}, nil
+}
+
+func initTracer(serviceName string) (*sdktrace.TracerProvider, error) {
+	return sdktrace.NewTracerProvider(
+		sdktrace.WithSampler(sdktrace.AlwaysSample()),
+		sdktrace.WithResource(resource.NewWithAttributes(
+			semconv.SchemaURL,
+			semconv.ServiceNameKey.String(serviceName),
+		)),
+	), nil
+}

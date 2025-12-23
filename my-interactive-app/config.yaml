@@ -1,0 +1,7 @@
+server:
+  type: rest
+  port: 8080
+
+app:
+  name: my-interactive-app
+  env: development
