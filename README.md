@@ -1,171 +1,126 @@
-# goboot
+# goboot 🚀
 
-`goboot` is a production-grade CLI tool for scaffolding Go projects.
+`goboot` is a production-grade CLI tool designed to scaffold Go projects with best practices, clean architecture, and a pluggable microservice factory.
 
-## Phase 1: CLI Foundation
+[![Go Version](https://img.shields.io/github/go-mod/go-version/codewithme224/goboot)](https://github.com/codewithme224/goboot)
+[![Release](https://img.shields.io/github/v/release/codewithme224/goboot)](https://github.com/codewithme224/goboot/releases)
+[![License](https://img.shields.io/github/license/codewithme224/goboot)](LICENSE)
 
-This is Phase 1 of the project, focusing on the CLI structure, flag handling, and validation.
+## Features
 
-### Features
+- **Pluggable Architecture**: Decoupled feature generators for databases, auth, and more.
+- **Incremental Adoption**: Add features to existing projects using `goboot add`.
+- **Production Ready**: Multi-stage Docker builds, Kubernetes manifests, and OpenTelemetry.
+- **Diagnostics**: Built-in `doctor` command to check project health.
+- **Interactive Mode**: Guided setup for new projects.
 
-- CLI foundation using Cobra and Viper.
-- Configuration-heavy flag system.
-- Clean internal architecture (config, validator, generator, filesystem).
-- Input validation for project name, module path, and types.
-- Stub generator for configuration summary.
+---
 
-### Installation
+## Installation
 
-```bash
-go build -o goboot main.go
-```
-
-### Usage
-
-#### Root Command
+### From Source (Requires Go 1.22+)
 
 ```bash
-./goboot --help
+go install github.com/codewithme224/goboot@latest
 ```
 
-#### Version
+### From Binaries
+
+Download the latest binary for your platform from the [Releases](https://github.com/codewithme224/goboot/releases) page.
+
+---
+
+## Quick Start
+
+### 1. Create a New Project
+
+The easiest way to start is using the **Interactive Mode**:
 
 ```bash
-./goboot version
+goboot new --interactive
 ```
 
-#### Create a New Project
+Or use flags for a quick setup:
 
 ```bash
-./goboot new --name myapp --module github.com/user/myapp --type rest
+goboot new --name myapp --module github.com/user/myapp --type rest --docker
 ```
 
-**Flags:**
+### 2. Add Features Incrementally
 
-- `--name`, `-n`: Project name (required)
-- `--module`, `-m`: Go module path (required)
-- `--type`, `-t`: Project type (`rest` | `grpc` | `cli` | `worker`, default: `rest`)
-- `--go-version`: Go version (default: `1.22`)
-- `--docker`: Include Dockerfile (default: `false`)
-- `--ci`: Include CI/CD workflow (default: `false`)
-- `--db`: Database type (`postgres` | `mysql` | `mongo` | `none`, default: `none`)
-- `--auth`: Authentication type (`jwt` | `apikey` | `none`, default: `none`)
-- `--observability`: Include observability (default: `false`)
-- `--dry-run`: Run without creating any files (default: `false`)
-- `--output`, `-o`: Output directory (default: `.`)
-
-### Architecture
-
-- `cmd/`: CLI command definitions (Cobra).
-- `internal/config/`: Configuration structs and constants.
-- `internal/validator/`: Input validation logic.
-- `internal/generator/`: Project scaffolding logic (stubbed in Phase 1).
-- `internal/filesystem/`: File system abstraction (stubbed in Phase 1).
-
-## Phase 3: gRPC, Config, and Docker
-
-Phase 3 adds support for gRPC microservices, YAML configuration, and Dockerfile generation.
-
-### Features
-
-- gRPC project generation with proto definitions.
-- YAML-based configuration for generated services.
-- Optional Dockerfile generation via `--docker` flag.
-- Refactored generator architecture with `BaseGenerator`.
-
-### Usage
-
-#### Generate a gRPC Service with Docker
-
-```bash
-./goboot new --name mygrpc --module github.com/user/mygrpc --type grpc --docker
-```
-
-```bash
-./goboot new --name myrest --module github.com/user/myrest --type rest
-```
-
-## Phase 6: Automation & Ecosystem
-
-Phase 6 expands `goboot` with automation tools, new project types, and remote plugin support.
-
-### Features
-
-- **CI/CD**: Added `goboot add ci` for GitHub Actions workflows.
-- **Testing**: Added `goboot add test` for `testify` scaffolds.
-- **New Project Types**: Added `cli` and `worker` project types.
-- **Remote Plugins**: Added `goboot add remote --url [git-url]` for third-party templates.
-- **Interactive Mode**: Added `goboot new --interactive` for a guided setup.
-
-### Usage
-
-#### Create a CLI project interactively
-
-```bash
-./goboot new --interactive
-```
-
-#### Add CI and Testing to an existing project
+Navigate to your project directory and add what you need:
 
 ```bash
 cd myapp
-../goboot add ci
-../goboot add test
+goboot add db --type postgres
+goboot add observability
+goboot add k8s
 ```
 
-#### Add a remote plugin
+---
 
-```bash
-../goboot add remote --url https://github.com/user/my-goboot-plugin
+## Core Commands
+
+### `goboot new`
+
+Scaffold a new project from scratch.
+
+- **Types**: `rest`, `grpc`, `cli`, `worker`.
+- **Flags**: `--docker`, `--db`, `--auth`, `--ci`, `--observability`.
+
+### `goboot add`
+
+Enhance an existing project with new capabilities.
+
+- `add db`: Supports `postgres`, `mysql`, `mongo`.
+- `add auth`: Adds JWT middleware (REST).
+- `add gateway`: Adds gRPC-Gateway (gRPC).
+- `add observability`: Adds OTel + Prometheus + Structured Logging.
+- `add k8s`: Generates Deployment, Service, and ConfigMap.
+- `add ci`: Generates GitHub Actions workflows.
+- `add test`: Adds `testify` scaffolds.
+- `add remote`: Pulls templates from a remote Git URL.
+
+### `goboot doctor`
+
+Checks the health of your project, validates `config.yaml`, `go.mod`, and checks for production best practices.
+
+### `goboot upgrade`
+
+Checks if your project templates are out of date and suggests a migration plan.
+
+---
+
+## Project Structure (Generated)
+
+A typical `goboot` project follows a clean architecture:
+
+```text
+myapp/
+├── cmd/                # Entry points (api, grpc, cli, worker)
+├── internal/
+│   ├── config/         # Configuration loading
+│   ├── server/         # Server setup (HTTP/gRPC)
+│   ├── service/        # Business logic
+│   ├── db/             # Database connections (if added)
+│   └── observability/  # OTel & Metrics (if added)
+├── k8s/                # Kubernetes manifests (if added)
+├── config.yaml         # Application configuration
+├── Dockerfile          # Multi-stage production build
+└── go.mod              # Module definition
 ```
 
-## Phase 5: Production Readiness & Diagnostics
-
-Phase 5 turns `goboot` into a production-ready platform generator with observability, Kubernetes support, and diagnostic tools.
-
-### Features
-
-- **Observability**: OpenTelemetry, Prometheus, and structured logging.
-- **Kubernetes**: Deployment, Service, and ConfigMap manifests.
-- **Production Docker**: Multi-stage builds with non-root users.
-- **`goboot doctor`**: Project health check and diagnostics.
-- **`goboot upgrade`**: Template version tracking and upgrade suggestions.
-
-### Usage
-
-#### Create a new project
-
-```bash
-./goboot new --name myapp --module github.com/user/myapp --type grpc --docker
-```
-
-#### Add production features
-
-```bash
-cd myapp
-../goboot add observability
-../goboot add k8s
-```
-
-#### Run diagnostics
-
-```bash
-../goboot doctor
-../goboot upgrade
-```
+---
 
 ## Production Readiness Checklist
 
-- [ ] **Config**: Ensure `config.yaml` is tuned for production.
-- [ ] **Observability**: Enable `observability.enabled` in `config.yaml`.
-- [ ] **Security**: Review Dockerfile and K8s manifests for security contexts.
-- [ ] **Resources**: Adjust K8s resource limits in `k8s/deployment.yaml`.
-- [ ] **Secrets**: Move sensitive config to K8s Secrets or a Secret Manager.
+- [ ] **Observability**: Enable `observability.enabled: true` in `config.yaml`.
+- [ ] **Security**: Review Dockerfile and K8s security contexts.
+- [ ] **Resources**: Tune CPU/Memory limits in `k8s/deployment.yaml`.
+- [ ] **Secrets**: Move sensitive data from `ConfigMap` to K8s `Secrets`.
+
+---
 
 ## License
 
-MIT
-
-```
-
-```
+MIT © [codewithme224](https://github.com/codewithme224)
