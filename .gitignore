@@ -1,0 +1,4 @@
+dist/
+goboot
+*.test
+.DS_Store
