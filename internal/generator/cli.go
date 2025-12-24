@@ -30,7 +30,10 @@ func (g *CLIGenerator) Supports(projectType string) bool {
 }
 
 func (g *CLIGenerator) Generate(ctx *context.ProjectContext) error {
-	return g.GenerateFromTemplates(ctx.Config, cliTemplates, "templates/cli", "")
+	if err := g.GenerateFromTemplates(ctx.Config, cliTemplates, "templates/cli", ""); err != nil {
+		return err
+	}
+	return g.Tidy(ctx.Config)
 }
 
 func init() {

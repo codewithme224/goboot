@@ -36,5 +36,8 @@ func (g *RESTGenerator) Supports(projectType string) bool {
 }
 
 func (g *RESTGenerator) Generate(ctx *context.ProjectContext) error {
-	return g.GenerateFromTemplates(ctx.Config, restTemplates, "templates/rest", "")
+	if err := g.GenerateFromTemplates(ctx.Config, restTemplates, "templates/rest", ""); err != nil {
+		return err
+	}
+	return g.Tidy(ctx.Config)
 }

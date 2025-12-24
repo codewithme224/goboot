@@ -31,7 +31,10 @@ func (g *CIGenerator) Supports(projectType string) bool {
 
 func (g *CIGenerator) Generate(ctx *context.ProjectContext) error {
 	// For now, we only support GitHub Actions
-	return g.GenerateFromTemplates(ctx.Config, ciTemplates, "templates/ci/github", ".github/workflows")
+	if err := g.GenerateFromTemplates(ctx.Config, ciTemplates, "templates/ci/github", ".github/workflows"); err != nil {
+		return err
+	}
+	return g.Tidy(ctx.Config)
 }
 
 func init() {

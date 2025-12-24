@@ -61,7 +61,7 @@ func (g *DBGenerator) Generate(ctx *context.ProjectContext) error {
 		return err
 	}
 
-	return nil
+	return g.Tidy(ctx.Config)
 }
 
 func (g *DBGenerator) updateConfig(ctx *context.ProjectContext) error {

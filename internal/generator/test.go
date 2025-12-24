@@ -2,10 +2,6 @@ package generator
 
 import (
 	"embed"
-	"fmt"
-	"os"
-	"os/exec"
-	"path/filepath"
 
 	"github.com/codewithme224/goboot/internal/context"
 	"github.com/codewithme224/goboot/internal/filesystem"
@@ -39,17 +35,8 @@ func (g *TestGenerator) Generate(ctx *context.ProjectContext) error {
 		return err
 	}
 
-	// 2. Add testify to go.mod
-	fmt.Println("Adding github.com/stretchr/testify to go.mod...")
-	projectPath := filepath.Join(ctx.RootDir, ctx.Config.Name)
-	cmd := exec.Command("go", "get", "github.com/stretchr/testify")
-	cmd.Dir = projectPath
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	// We don't fail if go get fails (e.g. no internet), just warn
-	_ = cmd.Run()
-
-	return nil
+	// 2. Run Tidy to download testify
+	return g.Tidy(ctx.Config)
 }
 
 func init() {

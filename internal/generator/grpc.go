@@ -36,5 +36,8 @@ func (g *GRPCGenerator) Supports(projectType string) bool {
 }
 
 func (g *GRPCGenerator) Generate(ctx *context.ProjectContext) error {
-	return g.GenerateFromTemplates(ctx.Config, grpcTemplates, "templates/grpc", "")
+	if err := g.GenerateFromTemplates(ctx.Config, grpcTemplates, "templates/grpc", ""); err != nil {
+		return err
+	}
+	return g.Tidy(ctx.Config)
 }

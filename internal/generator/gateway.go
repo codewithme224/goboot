@@ -58,7 +58,7 @@ func (g *GatewayGenerator) Generate(ctx *context.ProjectContext) error {
 		return err
 	}
 
-	return nil
+	return g.Tidy(ctx.Config)
 }
 
 func (g *GatewayGenerator) updateConfig(ctx *context.ProjectContext) error {

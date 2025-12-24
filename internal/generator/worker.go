@@ -30,7 +30,10 @@ func (g *WorkerGenerator) Supports(projectType string) bool {
 }
 
 func (g *WorkerGenerator) Generate(ctx *context.ProjectContext) error {
-	return g.GenerateFromTemplates(ctx.Config, workerTemplates, "templates/worker", "")
+	if err := g.GenerateFromTemplates(ctx.Config, workerTemplates, "templates/worker", ""); err != nil {
+		return err
+	}
+	return g.Tidy(ctx.Config)
 }
 
 func init() {

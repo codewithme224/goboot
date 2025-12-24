@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/fs"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 
@@ -24,6 +25,24 @@ func NewBaseGenerator(writer *filesystem.Writer, renderer *template.Renderer) *B
 		writer:   writer,
 		renderer: renderer,
 	}
+}
+
+// Tidy runs 'go mod tidy' in the project directory.
+func (b *BaseGenerator) Tidy(cfg *config.ProjectConfig) error {
+	projectPath := filepath.Join(cfg.Output, cfg.Name)
+
+	// Check if go.mod exists
+	if _, err := os.Stat(filepath.Join(projectPath, "go.mod")); os.IsNotExist(err) {
+		return nil
+	}
+
+	fmt.Printf("Running 'go mod tidy' in %s...\n", projectPath)
+	cmd := exec.Command("go", "mod", "tidy")
+	cmd.Dir = projectPath
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	return cmd.Run()
 }
 
 // GenerateFromTemplates walks through the templates and renders them.
